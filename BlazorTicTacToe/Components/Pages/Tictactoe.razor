@@ -34,8 +34,23 @@
 
 @code {
     // --- Data --- //
-
     CellState currentPlayer = CellState.CROSS;
+
+    // Check if board is full
+    bool IsBoardFull 
+    {
+        get
+        {
+            foreach(BoardCell item in currentBoardData)
+            {
+                if (item.state == CellState.DEFAULT)
+                {
+                    return false;
+                }
+            }
+            return true;    
+        }
+    }
 
     // Array to hold board data
     BoardCell[,] currentBoardData =
@@ -70,9 +85,76 @@
     public void BoardCellOnClick(BoardCell cell)
     {
         cell.ChangeState(currentPlayer);
-        // Check win
-        // Check board full
+
+        if (CheckIfCurrentPlayerWon())
+        {
+            LockBoard();
+            // Alert that the game is over and who has won
+
+            return;
+        }
+
+        if (IsBoardFull)
+        {
+            // Alert that the game is over because of no space on the board
+            return;
+        }
+
         ChangePlayer();
+    }
+
+    // Check if current player has winning combination
+    public bool CheckIfCurrentPlayerWon()
+    {
+        for(int col = 0; col < currentBoardData.GetLength(0); col++)
+        {
+            for(int row = 0; row < currentBoardData.GetLength(1); row++)
+            {
+                if (currentBoardData[col, row].state == currentPlayer)
+                {
+                    // Checkes for lines made with current cell as center
+                    if (CheckCell(col - 1, row - 1) && CheckCell(col + 1, row + 1)) return true;
+                    if (CheckCell(col - 1, row + 1) && CheckCell(col + 1, row - 1)) return true;
+                    if (CheckCell(col - 0, row - 1) && CheckCell(col + 0, row + 1)) return true;
+                    if (CheckCell(col - 1, row - 0) && CheckCell(col + 1, row - 0)) return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    // Checks if cell at chosen coordinates is of current player
+    private bool CheckCell(int col, int row)
+    {
+        // Check if coordinates are inside of index
+        if (col < currentBoardData.GetLength(0) && col >= 0 &&
+            row < currentBoardData.GetLength(1) && row >= 0)
+        {
+            // If searched cell is in an array, check if it matches current player
+            if (currentBoardData[col, row].state == currentPlayer)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            // If checked place is out of bound (what is gonna happen), return that the cell is not of interest for current player
+            return false;
+        }
+    }
+
+    // Set all buttons to be unclickable
+    public void LockBoard()
+    {
+        foreach (BoardCell item in currentBoardData)
+        {
+            item.disabled = " disabled ";
+        }
     }
 
     // Restart board settings to default
@@ -86,6 +168,8 @@
 
     public class BoardCell
     {
+        public CellState state = CellState.DEFAULT;
+
         public string text = "-";
         public string color = "btn-secondary";
         public string disabled = "";
@@ -94,14 +178,15 @@
         {
             ;
         }
-        public BoardCell(Enum cellState)
+        public BoardCell(CellState cellState)
         {
             ChangeState(cellState);
         }
 
         // Changed button adequate to the state
-        public void ChangeState(Enum cellState)
+        public void ChangeState(CellState cellState)
         {
+            state = cellState;
             switch(cellState)
             {
                 case CellState.DEFAULT:
@@ -119,9 +204,6 @@
                     color = " btn-danger ";
                     disabled = " disabled ";
                     break;
-                case CellState.WIN:
-                    color = " btn-warning ";
-                    break;
             }
         }
     }
@@ -130,7 +212,6 @@
     {
         DEFAULT,
         CIRCLE,
-        CROSS,
-        WIN
+        CROSS
     }
 }
