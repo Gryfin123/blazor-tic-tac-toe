@@ -1,5 +1,6 @@
 ﻿@page "/tictactoe"
 @rendermode InteractiveServer
+@inject IJSRuntime JsRuntime
 
 <PageTitle>Tic-Tac-Toe</PageTitle>
 
@@ -7,7 +8,7 @@
 
 <button class="btn btn-primary disabled">Player vs Player</button>
 <!--<button class="btn btn-primary disabled">Player vs AI</button>-->
-<button class="btn btn-danger" @onclick="RestartBoard">Restart</button>
+<button class="btn btn-danger" @onclick="gameLogic.RestartBoard">Restart</button>
 
 <br />
 <br />
@@ -15,203 +16,44 @@
 <br />
 
 
-<button class="btn @currentBoardData[0,0].color @currentBoardData[0,0].disabled w-f50" @onclick="() => BoardCellOnClick(currentBoardData[0, 0])">@currentBoardData[0, 0].text  </button>
-<button class="btn @currentBoardData[0,1].color @currentBoardData[0,1].disabled w-f50" @onclick="() => BoardCellOnClick(currentBoardData[0, 1])"> @currentBoardData[0, 1].text </button>
-<button class="btn @currentBoardData[0,2].color @currentBoardData[0,2].disabled w-f50" @onclick="() => BoardCellOnClick(currentBoardData[0, 2])"> @currentBoardData[0, 2].text </button>
+<button class="btn @gameLogic.currentBoardData[0,0].Color @gameLogic.currentBoardData[0,0].DisabledText w-f50" @onclick="() => gameLogic.BoardCellOnClick(gameLogic.currentBoardData[0, 0])"> @gameLogic.currentBoardData[0, 0].Text  </button>
+<button class="btn @gameLogic.currentBoardData[0,1].Color @gameLogic.currentBoardData[0,1].DisabledText w-f50" @onclick="() => gameLogic.BoardCellOnClick(gameLogic.currentBoardData[0, 1])"> @gameLogic.currentBoardData[0, 1].Text </button>
+<button class="btn @gameLogic.currentBoardData[0,2].Color @gameLogic.currentBoardData[0,2].DisabledText w-f50" @onclick="() => gameLogic.BoardCellOnClick(gameLogic.currentBoardData[0, 2])"> @gameLogic.currentBoardData[0, 2].Text </button>
 <br />
 <br />
-<button class="btn @currentBoardData[1,0].color @currentBoardData[1,0].disabled w-f50" @onclick="() => BoardCellOnClick(currentBoardData[1, 0])"> @currentBoardData[1, 0].text </button>
-<button class="btn @currentBoardData[1,1].color @currentBoardData[1,1].disabled w-f50" @onclick="() => BoardCellOnClick(currentBoardData[1, 1])"> @currentBoardData[1, 1].text </button>
-<button class="btn @currentBoardData[1,2].color @currentBoardData[1,2].disabled w-f50" @onclick="() => BoardCellOnClick(currentBoardData[1, 2])"> @currentBoardData[1, 2].text </button>
+<button class="btn @gameLogic.currentBoardData[1,0].Color @gameLogic.currentBoardData[1,0].DisabledText w-f50" @onclick="() => gameLogic.BoardCellOnClick(gameLogic.currentBoardData[1, 0])"> @gameLogic.currentBoardData[1, 0].Text </button>
+<button class="btn @gameLogic.currentBoardData[1,1].Color @gameLogic.currentBoardData[1,1].DisabledText w-f50" @onclick="() => gameLogic.BoardCellOnClick(gameLogic.currentBoardData[1, 1])"> @gameLogic.currentBoardData[1, 1].Text </button>
+<button class="btn @gameLogic.currentBoardData[1,2].Color @gameLogic.currentBoardData[1,2].DisabledText w-f50" @onclick="() => gameLogic.BoardCellOnClick(gameLogic.currentBoardData[1, 2])"> @gameLogic.currentBoardData[1, 2].Text </button>
 <br />
 <br />
-<button class="btn @currentBoardData[2,0].color @currentBoardData[2,0].disabled w-f50" @onclick="() => BoardCellOnClick(currentBoardData[2, 0])"> @currentBoardData[2, 0].text </button>
-<button class="btn @currentBoardData[2,1].color @currentBoardData[2,1].disabled w-f50" @onclick="() => BoardCellOnClick(currentBoardData[2, 1])"> @currentBoardData[2, 1].text </button>
-<button class="btn @currentBoardData[2,2].color @currentBoardData[2,2].disabled w-f50" @onclick="() => BoardCellOnClick(currentBoardData[2, 2])"> @currentBoardData[2, 2].text </button>
+<button class="btn @gameLogic.currentBoardData[2,0].Color @gameLogic.currentBoardData[2,0].DisabledText w-f50" @onclick="() => gameLogic.BoardCellOnClick(gameLogic.currentBoardData[2, 0])"> @gameLogic.currentBoardData[2, 0].Text </button>
+<button class="btn @gameLogic.currentBoardData[2,1].Color @gameLogic.currentBoardData[2,1].DisabledText w-f50" @onclick="() => gameLogic.BoardCellOnClick(gameLogic.currentBoardData[2, 1])"> @gameLogic.currentBoardData[2, 1].Text </button>
+<button class="btn @gameLogic.currentBoardData[2,2].Color @gameLogic.currentBoardData[2,2].DisabledText w-f50" @onclick="() => gameLogic.BoardCellOnClick(gameLogic.currentBoardData[2, 2])"> @gameLogic.currentBoardData[2, 2].Text </button>
 
 
-<script></script>
 
 @code {
-    // --- Data --- //
-    CellState currentPlayer = CellState.CROSS;
+    GameLogic gameLogic = new GameLogic();
 
-    // Check if board is full
-    bool IsBoardFull 
+    public async void MessageHandler(string message)
     {
-        get
-        {
-            foreach(BoardCell item in currentBoardData)
-            {
-                if (item.state == CellState.DEFAULT)
-                {
-                    return false;
-                }
-            }
-            return true;    
-        }
+        await Alert(message);
     }
 
-    // Array to hold board data
-    BoardCell[,] currentBoardData =
+    private async Task Alert(string message)
     {
-        { new BoardCell(CellState.CROSS),
-            new BoardCell(), 
-            new BoardCell(CellState.CROSS)},
-        { new BoardCell(), 
-            new BoardCell(), 
-            new BoardCell()},
-        { new BoardCell(),
-            new BoardCell(CellState.CROSS),
-            new BoardCell(CellState.CROSS)}
-    };
-
-
-    // --- Functions --- //
-    //Change player after an action
-    public void ChangePlayer()
-    {
-        if (currentPlayer == CellState.CROSS)
-        {
-            currentPlayer = CellState.CIRCLE;
-        }
-        else
-        {
-            currentPlayer = CellState.CROSS;
-        }
+        await JsRuntime.InvokeAsync<object>("Alert", message);
     }
 
-    // Triggered when clicked on a cell
-    public void BoardCellOnClick(BoardCell cell)
+
+    // Equivelent of "OnLoad" 
+    protected override void OnAfterRender(bool firstRender)
     {
-        cell.ChangeState(currentPlayer);
-
-        if (CheckIfCurrentPlayerWon())
+        // execute conditionally for loading data, otherwise this will load
+        // every time the page refreshes
+        if (firstRender)
         {
-            LockBoard();
-            // Alert that the game is over and who has won
-
-            return;
+            gameLogic.RaiseMessage += MessageHandler;
         }
-
-        if (IsBoardFull)
-        {
-            // Alert that the game is over because of no space on the board
-            return;
-        }
-
-        ChangePlayer();
-    }
-
-    // Check if current player has winning combination
-    public bool CheckIfCurrentPlayerWon()
-    {
-        for(int col = 0; col < currentBoardData.GetLength(0); col++)
-        {
-            for(int row = 0; row < currentBoardData.GetLength(1); row++)
-            {
-                if (currentBoardData[col, row].state == currentPlayer)
-                {
-                    // Checkes for lines made with current cell as center
-                    if (CheckCell(col - 1, row - 1) && CheckCell(col + 1, row + 1)) return true;
-                    if (CheckCell(col - 1, row + 1) && CheckCell(col + 1, row - 1)) return true;
-                    if (CheckCell(col - 0, row - 1) && CheckCell(col + 0, row + 1)) return true;
-                    if (CheckCell(col - 1, row - 0) && CheckCell(col + 1, row - 0)) return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    // Checks if cell at chosen coordinates is of current player
-    private bool CheckCell(int col, int row)
-    {
-        // Check if coordinates are inside of index
-        if (col < currentBoardData.GetLength(0) && col >= 0 &&
-            row < currentBoardData.GetLength(1) && row >= 0)
-        {
-            // If searched cell is in an array, check if it matches current player
-            if (currentBoardData[col, row].state == currentPlayer)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        else
-        {
-            // If checked place is out of bound (what is gonna happen), return that the cell is not of interest for current player
-            return false;
-        }
-    }
-
-    // Set all buttons to be unclickable
-    public void LockBoard()
-    {
-        foreach (BoardCell item in currentBoardData)
-        {
-            item.disabled = " disabled ";
-        }
-    }
-
-    // Restart board settings to default
-    public void RestartBoard()
-    {
-        foreach(BoardCell item in currentBoardData)
-        {
-            item.ChangeState(CellState.DEFAULT);
-        }
-    }
-
-    public class BoardCell
-    {
-        public CellState state = CellState.DEFAULT;
-
-        public string text = "-";
-        public string color = "btn-secondary";
-        public string disabled = "";
-
-        public BoardCell()
-        {
-            ;
-        }
-        public BoardCell(CellState cellState)
-        {
-            ChangeState(cellState);
-        }
-
-        // Changed button adequate to the state
-        public void ChangeState(CellState cellState)
-        {
-            state = cellState;
-            switch(cellState)
-            {
-                case CellState.DEFAULT:
-                    text = "-";
-                    color = "btn-secondary";
-                    disabled = "";
-                    break;
-                case CellState.CIRCLE:
-                    text = " o ";
-                    color = "btn-success";
-                    disabled = " disabled ";
-                    break;
-                case CellState.CROSS:
-                    text = " x ";
-                    color = " btn-danger ";
-                    disabled = " disabled ";
-                    break;
-            }
-        }
-    }
-
-    public enum CellState
-    {
-        DEFAULT,
-        CIRCLE,
-        CROSS
     }
 }
