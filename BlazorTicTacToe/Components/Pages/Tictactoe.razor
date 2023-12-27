@@ -1,0 +1,110 @@
+﻿@page "/tictactoe"
+@rendermode InteractiveServer
+
+<PageTitle>Tic-Tac-Toe</PageTitle>
+
+<h3>Tic-Tac-Toe</h3>
+
+<button class="btn btn-primary" @onclick="SelectedModePlayer">Player vs Player</button>
+<button class="btn btn-primary disabled">Player vs AI</button>
+
+<p role="status">Status: <span class="@currentStatusColor">@currentStatus</span></p>
+
+
+<button class="btn @currentBoardData[0,0].color @currentBoardData[0,0].disabled w-25"> @currentBoardData[0, 0].text </button>
+<button class="btn @currentBoardData[0,1].color @currentBoardData[0,1].disabled w-25"> @currentBoardData[0, 1].text </button>
+<button class="btn @currentBoardData[0,2].color @currentBoardData[0,2].disabled w-25"> @currentBoardData[0, 2].text </button>
+
+<button class="btn @currentBoardData[1,0].color @currentBoardData[1,0].disabled w-25"> @currentBoardData[1, 0].text </button>
+<button class="btn @currentBoardData[1,1].color @currentBoardData[1,1].disabled w-25"> @currentBoardData[1, 1].text </button>
+<button class="btn @currentBoardData[1,2].color @currentBoardData[1,2].disabled w-25"> @currentBoardData[1, 2].text </button>
+
+<button class="btn @currentBoardData[2,0].color @currentBoardData[2,0].disabled w-25"> @currentBoardData[2, 0].text </button>
+<button class="btn @currentBoardData[2,1].color @currentBoardData[2,1].disabled w-25"> @currentBoardData[2, 1].text </button>
+<button class="btn @currentBoardData[2,2].color @currentBoardData[2,2].disabled w-25"> @currentBoardData[2, 2].text </button>
+
+
+<script></script>
+
+@code {
+    string currentStatus = "Select Mode";
+    string currentStatusColor = "text-success";
+
+
+    // Array to hold board data
+    BoardCell[,] currentBoardData =
+    {
+        { new BoardCell(CellState.CROSS),
+            new BoardCell(), 
+            new BoardCell(CellState.CROSS)},
+        { new BoardCell(CellState.CIRCLE), 
+            new BoardCell(), 
+            new BoardCell(CellState.CIRCLE)},
+        { new BoardCell(CellState.CIRCLE),
+            new BoardCell(CellState.CROSS),
+            new BoardCell(CellState.CROSS)}
+    };
+    string[,] XcurrentBoardData =
+    {
+        { "o", "x", "o"},
+        { "x", "x", "-"},
+        { "o", "-", "x"}
+    };
+
+
+
+    private void SelectedModePlayer()
+    {
+
+    }
+
+
+    class BoardCell
+    {
+        public string text = "-";
+        public string color = "btn-secondary";
+        public string disabled = "";
+
+
+        public BoardCell()
+        {
+            
+        }
+
+        public BoardCell(Enum cellState)
+        {
+            ChangeState(cellState);
+        }
+
+        public void ChangeState(Enum cellState)
+        {
+            switch(cellState)
+            {
+                case CellState.DEFAULT:
+                    text = "-";
+                    color = "btn-secondary";
+                    disabled = "";
+                    break;
+                case CellState.CIRCLE:
+                    text = " o ";
+                    color = "btn-success";
+                    disabled = " disabled ";
+                    break;
+                case CellState.CROSS:
+                    text = " x ";
+                    color = " btn-danger ";
+                    disabled = " disabled ";
+                    break;
+            }
+        }
+    }
+
+    enum CellState
+    {
+        DEFAULT,
+        CIRCLE,
+        CROSS
+    }
+
+
+}
