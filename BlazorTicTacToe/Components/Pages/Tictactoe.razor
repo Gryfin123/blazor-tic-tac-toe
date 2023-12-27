@@ -15,26 +15,27 @@
 <br />
 
 
-<button class="btn @currentBoardData[0,0].color @currentBoardData[0,0].disabled w-10" @onclick="() => BoardCellOnClick(currentBoardData[0, 0])">@currentBoardData[0, 0].text  </button>
-<button class="btn @currentBoardData[0,1].color @currentBoardData[0,1].disabled w-10" @onclick="() => BoardCellOnClick(currentBoardData[0, 1])"> @currentBoardData[0, 1].text </button>
-<button class="btn @currentBoardData[0,2].color @currentBoardData[0,2].disabled w-10" @onclick="() => BoardCellOnClick(currentBoardData[0, 2])"> @currentBoardData[0, 2].text </button>
+<button class="btn @currentBoardData[0,0].color @currentBoardData[0,0].disabled w-f50" @onclick="() => BoardCellOnClick(currentBoardData[0, 0])">@currentBoardData[0, 0].text  </button>
+<button class="btn @currentBoardData[0,1].color @currentBoardData[0,1].disabled w-f50" @onclick="() => BoardCellOnClick(currentBoardData[0, 1])"> @currentBoardData[0, 1].text </button>
+<button class="btn @currentBoardData[0,2].color @currentBoardData[0,2].disabled w-f50" @onclick="() => BoardCellOnClick(currentBoardData[0, 2])"> @currentBoardData[0, 2].text </button>
 <br />
 <br />
-<button class="btn @currentBoardData[1,0].color @currentBoardData[1,0].disabled w-10" @onclick="() => BoardCellOnClick(currentBoardData[1, 0])"> @currentBoardData[1, 0].text </button>
-<button class="btn @currentBoardData[1,1].color @currentBoardData[1,1].disabled w-10" @onclick="() => BoardCellOnClick(currentBoardData[1, 1])"> @currentBoardData[1, 1].text </button>
-<button class="btn @currentBoardData[1,2].color @currentBoardData[1,2].disabled w-10" @onclick="() => BoardCellOnClick(currentBoardData[1, 2])"> @currentBoardData[1, 2].text </button>
+<button class="btn @currentBoardData[1,0].color @currentBoardData[1,0].disabled w-f50" @onclick="() => BoardCellOnClick(currentBoardData[1, 0])"> @currentBoardData[1, 0].text </button>
+<button class="btn @currentBoardData[1,1].color @currentBoardData[1,1].disabled w-f50" @onclick="() => BoardCellOnClick(currentBoardData[1, 1])"> @currentBoardData[1, 1].text </button>
+<button class="btn @currentBoardData[1,2].color @currentBoardData[1,2].disabled w-f50" @onclick="() => BoardCellOnClick(currentBoardData[1, 2])"> @currentBoardData[1, 2].text </button>
 <br />
 <br />
-<button class="btn @currentBoardData[2,0].color @currentBoardData[2,0].disabled w-10" @onclick="() => BoardCellOnClick(currentBoardData[2, 0])"> @currentBoardData[2, 0].text </button>
-<button class="btn @currentBoardData[2,1].color @currentBoardData[2,1].disabled w-10" @onclick="() => BoardCellOnClick(currentBoardData[2, 1])"> @currentBoardData[2, 1].text </button>
-<button class="btn @currentBoardData[2,2].color @currentBoardData[2,2].disabled w-10" @onclick="() => BoardCellOnClick(currentBoardData[2, 2])"> @currentBoardData[2, 2].text </button>
+<button class="btn @currentBoardData[2,0].color @currentBoardData[2,0].disabled w-f50" @onclick="() => BoardCellOnClick(currentBoardData[2, 0])"> @currentBoardData[2, 0].text </button>
+<button class="btn @currentBoardData[2,1].color @currentBoardData[2,1].disabled w-f50" @onclick="() => BoardCellOnClick(currentBoardData[2, 1])"> @currentBoardData[2, 1].text </button>
+<button class="btn @currentBoardData[2,2].color @currentBoardData[2,2].disabled w-f50" @onclick="() => BoardCellOnClick(currentBoardData[2, 2])"> @currentBoardData[2, 2].text </button>
 
 
 <script></script>
 
 @code {
-    string currentStatus = "Select Mode";
-    string currentStatusColor = "text-success";
+    // --- Data --- //
+
+    CellState currentPlayer = CellState.CROSS;
 
     // Array to hold board data
     BoardCell[,] currentBoardData =
@@ -51,11 +52,30 @@
     };
 
 
-    public void BoardCellOnClick(BoardCell cell)
+    // --- Functions --- //
+    //Change player after an action
+    public void ChangePlayer()
     {
-        cell.ChangeState(CellState.CIRCLE);
+        if (currentPlayer == CellState.CROSS)
+        {
+            currentPlayer = CellState.CIRCLE;
+        }
+        else
+        {
+            currentPlayer = CellState.CROSS;
+        }
     }
 
+    // Triggered when clicked on a cell
+    public void BoardCellOnClick(BoardCell cell)
+    {
+        cell.ChangeState(currentPlayer);
+        // Check win
+        // Check board full
+        ChangePlayer();
+    }
+
+    // Restart board settings to default
     public void RestartBoard()
     {
         foreach(BoardCell item in currentBoardData)
@@ -74,12 +94,12 @@
         {
             ;
         }
-
         public BoardCell(Enum cellState)
         {
             ChangeState(cellState);
         }
 
+        // Changed button adequate to the state
         public void ChangeState(Enum cellState)
         {
             switch(cellState)
@@ -99,6 +119,9 @@
                     color = " btn-danger ";
                     disabled = " disabled ";
                     break;
+                case CellState.WIN:
+                    color = " btn-warning ";
+                    break;
             }
         }
     }
@@ -107,6 +130,7 @@
     {
         DEFAULT,
         CIRCLE,
-        CROSS
+        CROSS,
+        WIN
     }
 }
