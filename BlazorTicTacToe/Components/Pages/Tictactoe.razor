@@ -5,23 +5,29 @@
 
 <h3>Tic-Tac-Toe</h3>
 
-<button class="btn btn-primary" @onclick="SelectedModePlayer">Player vs Player</button>
-<button class="btn btn-primary disabled">Player vs AI</button>
+<button class="btn btn-primary disabled">Player vs Player</button>
+<!--<button class="btn btn-primary disabled">Player vs AI</button>-->
+<button class="btn btn-danger" @onclick="RestartBoard">Restart</button>
 
-<p role="status">Status: <span class="@currentStatusColor">@currentStatus</span></p>
+<br />
+<br />
+<br />
+<br />
 
 
-<button class="btn @currentBoardData[0,0].color @currentBoardData[0,0].disabled w-25"> @currentBoardData[0, 0].text </button>
-<button class="btn @currentBoardData[0,1].color @currentBoardData[0,1].disabled w-25"> @currentBoardData[0, 1].text </button>
-<button class="btn @currentBoardData[0,2].color @currentBoardData[0,2].disabled w-25"> @currentBoardData[0, 2].text </button>
-
-<button class="btn @currentBoardData[1,0].color @currentBoardData[1,0].disabled w-25"> @currentBoardData[1, 0].text </button>
-<button class="btn @currentBoardData[1,1].color @currentBoardData[1,1].disabled w-25"> @currentBoardData[1, 1].text </button>
-<button class="btn @currentBoardData[1,2].color @currentBoardData[1,2].disabled w-25"> @currentBoardData[1, 2].text </button>
-
-<button class="btn @currentBoardData[2,0].color @currentBoardData[2,0].disabled w-25"> @currentBoardData[2, 0].text </button>
-<button class="btn @currentBoardData[2,1].color @currentBoardData[2,1].disabled w-25"> @currentBoardData[2, 1].text </button>
-<button class="btn @currentBoardData[2,2].color @currentBoardData[2,2].disabled w-25"> @currentBoardData[2, 2].text </button>
+<button class="btn @currentBoardData[0,0].color @currentBoardData[0,0].disabled w-10" @onclick="() => BoardCellOnClick(currentBoardData[0, 0])">@currentBoardData[0, 0].text  </button>
+<button class="btn @currentBoardData[0,1].color @currentBoardData[0,1].disabled w-10" @onclick="() => BoardCellOnClick(currentBoardData[0, 1])"> @currentBoardData[0, 1].text </button>
+<button class="btn @currentBoardData[0,2].color @currentBoardData[0,2].disabled w-10" @onclick="() => BoardCellOnClick(currentBoardData[0, 2])"> @currentBoardData[0, 2].text </button>
+<br />
+<br />
+<button class="btn @currentBoardData[1,0].color @currentBoardData[1,0].disabled w-10" @onclick="() => BoardCellOnClick(currentBoardData[1, 0])"> @currentBoardData[1, 0].text </button>
+<button class="btn @currentBoardData[1,1].color @currentBoardData[1,1].disabled w-10" @onclick="() => BoardCellOnClick(currentBoardData[1, 1])"> @currentBoardData[1, 1].text </button>
+<button class="btn @currentBoardData[1,2].color @currentBoardData[1,2].disabled w-10" @onclick="() => BoardCellOnClick(currentBoardData[1, 2])"> @currentBoardData[1, 2].text </button>
+<br />
+<br />
+<button class="btn @currentBoardData[2,0].color @currentBoardData[2,0].disabled w-10" @onclick="() => BoardCellOnClick(currentBoardData[2, 0])"> @currentBoardData[2, 0].text </button>
+<button class="btn @currentBoardData[2,1].color @currentBoardData[2,1].disabled w-10" @onclick="() => BoardCellOnClick(currentBoardData[2, 1])"> @currentBoardData[2, 1].text </button>
+<button class="btn @currentBoardData[2,2].color @currentBoardData[2,2].disabled w-10" @onclick="() => BoardCellOnClick(currentBoardData[2, 2])"> @currentBoardData[2, 2].text </button>
 
 
 <script></script>
@@ -30,45 +36,43 @@
     string currentStatus = "Select Mode";
     string currentStatusColor = "text-success";
 
-
     // Array to hold board data
     BoardCell[,] currentBoardData =
     {
         { new BoardCell(CellState.CROSS),
             new BoardCell(), 
             new BoardCell(CellState.CROSS)},
-        { new BoardCell(CellState.CIRCLE), 
+        { new BoardCell(), 
             new BoardCell(), 
-            new BoardCell(CellState.CIRCLE)},
-        { new BoardCell(CellState.CIRCLE),
+            new BoardCell()},
+        { new BoardCell(),
             new BoardCell(CellState.CROSS),
             new BoardCell(CellState.CROSS)}
     };
-    string[,] XcurrentBoardData =
+
+
+    public void BoardCellOnClick(BoardCell cell)
     {
-        { "o", "x", "o"},
-        { "x", "x", "-"},
-        { "o", "-", "x"}
-    };
-
-
-
-    private void SelectedModePlayer()
-    {
-
+        cell.ChangeState(CellState.CIRCLE);
     }
 
+    public void RestartBoard()
+    {
+        foreach(BoardCell item in currentBoardData)
+        {
+            item.ChangeState(CellState.DEFAULT);
+        }
+    }
 
-    class BoardCell
+    public class BoardCell
     {
         public string text = "-";
         public string color = "btn-secondary";
         public string disabled = "";
 
-
         public BoardCell()
         {
-            
+            ;
         }
 
         public BoardCell(Enum cellState)
@@ -99,12 +103,10 @@
         }
     }
 
-    enum CellState
+    public enum CellState
     {
         DEFAULT,
         CIRCLE,
         CROSS
     }
-
-
 }
