@@ -12,7 +12,7 @@ namespace BlazroTicTacToe.Components
 
 
         // --- Data --- //
-        CellState currentPlayer = CellState.CROSS;
+        public CellState currentPlayer = CellState.CROSS;
 
 
         // Check if board is full
@@ -34,16 +34,16 @@ namespace BlazroTicTacToe.Components
         // Array to hold board data
         public BoardCell[,] currentBoardData =
         {
-        { new BoardCell(CellState.CROSS),
-            new BoardCell(),
-            new BoardCell(CellState.CROSS)},
         { new BoardCell(),
             new BoardCell(),
             new BoardCell()},
         { new BoardCell(),
-            new BoardCell(CellState.CROSS),
-            new BoardCell(CellState.CROSS)}
-    };
+            new BoardCell(),
+            new BoardCell()},
+        { new BoardCell(),
+            new BoardCell(),
+            new BoardCell()}
+        };
 
 
         // --- Functions --- //
@@ -94,6 +94,14 @@ namespace BlazroTicTacToe.Components
 
             ChangePlayer();
         }
+
+        // Triggered when clicked on a cell, but use specific CellState.
+        // Used for unit testing
+        public void BoardCellOnClick(BoardCell cell, CellState state)
+        {
+            currentPlayer = state;
+            BoardCellOnClick(cell);
+        }
         // Check if current player has winning combination
         public bool CheckIfCurrentPlayerWon()
         {
@@ -104,10 +112,10 @@ namespace BlazroTicTacToe.Components
                     if (currentBoardData[col, row].State == currentPlayer)
                     {
                         // Checkes for lines made with current cell as center
-                        if (CheckCell(col - 1, row - 1) && CheckCell(col + 1, row + 1)) return true;
-                        if (CheckCell(col - 1, row + 1) && CheckCell(col + 1, row - 1)) return true;
-                        if (CheckCell(col - 0, row - 1) && CheckCell(col + 0, row + 1)) return true;
-                        if (CheckCell(col - 1, row - 0) && CheckCell(col + 1, row - 0)) return true;
+                        if (CheckCellForCurrentPlayer(col - 1, row - 1) && CheckCellForCurrentPlayer(col + 1, row + 1)) return true;
+                        if (CheckCellForCurrentPlayer(col - 1, row + 1) && CheckCellForCurrentPlayer(col + 1, row - 1)) return true;
+                        if (CheckCellForCurrentPlayer(col - 0, row - 1) && CheckCellForCurrentPlayer(col + 0, row + 1)) return true;
+                        if (CheckCellForCurrentPlayer(col - 1, row - 0) && CheckCellForCurrentPlayer(col + 1, row - 0)) return true;
                     }
                 }
             }
@@ -115,7 +123,7 @@ namespace BlazroTicTacToe.Components
             return false;
         }
         // Checks if cell at chosen coordinates is of current player
-        private bool CheckCell(int col, int row)
+        public bool CheckCellForCurrentPlayer(int col, int row)
         {
             // Check if coordinates are inside of index
             if (col < currentBoardData.GetLength(0) && col >= 0 &&

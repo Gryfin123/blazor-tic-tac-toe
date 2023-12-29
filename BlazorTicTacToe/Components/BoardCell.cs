@@ -4,6 +4,20 @@ namespace BlazroTicTacToe.Components
 {
     public class BoardCell
     {
+        // Static Definitions for symbols and colors
+        public static string _playerSymbol1 { get { return "x"; } }
+        public static string _playerSymbol2 { get { return "o"; } }
+        public static string _defaultSymbol { get { return "-"; } }
+
+        public static string _playerColor1 { get { return " btn-secondary "; } } 
+        public static string _playerColor2 { get { return " btn-success "; } }
+        public static string _defaultColor { get { return " btn-secondary "; } }
+
+        public static string _disabledText { get { return " disabled "; } }
+        public static string _enabledText { get { return ""; } }
+
+
+
         private CellState state = CellState.DEFAULT;
         private bool disabled = false;
 
@@ -19,13 +33,13 @@ namespace BlazroTicTacToe.Components
                 switch (state)
                 {
                     case CellState.DEFAULT:
-                        return "-";
+                        return _defaultSymbol;
                     case CellState.CIRCLE:
-                        return "o";
+                        return _playerSymbol2;
                     case CellState.CROSS:
-                        return "x";
+                        return _playerSymbol1;
                     default:
-                        return "-";
+                        return _defaultSymbol;
                 }
             }
         }
@@ -36,13 +50,13 @@ namespace BlazroTicTacToe.Components
                 switch (state)
                 {
                     case CellState.DEFAULT:
-                        return " btn-secondary ";
+                        return _defaultColor;
                     case CellState.CIRCLE:
-                        return " btn-success ";
+                        return _playerColor2;
                     case CellState.CROSS:
-                        return " btn-danger ";
+                        return _playerColor1;
                     default:
-                        return "btn-secondary";
+                        return _defaultColor;
                 }
             }
         }
@@ -56,19 +70,19 @@ namespace BlazroTicTacToe.Components
             {
                 if (disabled)
                 {
-                    return " disabled ";
+                    return _disabledText;
                 }
 
                 switch (state)
                 {
                     case CellState.DEFAULT:
-                        return "";
+                        return _enabledText;
                     case CellState.CIRCLE:
-                        return " disabled ";
+                        return _disabledText;
                     case CellState.CROSS:
-                        return " disabled ";
+                        return _disabledText;
                     default:
-                        return "";
+                        return _enabledText;
                 }
             }
         }
