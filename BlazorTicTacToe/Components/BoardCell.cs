@@ -5,13 +5,13 @@ namespace BlazroTicTacToe.Components
     public class BoardCell
     {
         // Static Definitions for symbols and colors
-        public static string _playerSymbol1 { get { return "x"; } }
-        public static string _playerSymbol2 { get { return "o"; } }
-        public static string _defaultSymbol { get { return "-"; } }
+        public static string _symbolPlayerX { get { return "x"; } }
+        public static string _symbolPlayerO { get { return "o"; } }
+        public static string _symbolDefault { get { return "-"; } }
 
-        public static string _playerColor1 { get { return " btn-secondary "; } } 
-        public static string _playerColor2 { get { return " btn-success "; } }
-        public static string _defaultColor { get { return " btn-secondary "; } }
+        public static string _colorPlayerX { get { return " btn-danger "; } } 
+        public static string _colorPlayerO { get { return " btn-success "; } }
+        public static string _colorDefault { get { return " btn-secondary "; } }
 
         public static string _disabledText { get { return " disabled "; } }
         public static string _enabledText { get { return ""; } }
@@ -33,13 +33,13 @@ namespace BlazroTicTacToe.Components
                 switch (state)
                 {
                     case CellState.DEFAULT:
-                        return _defaultSymbol;
+                        return _symbolDefault;
                     case CellState.CIRCLE:
-                        return _playerSymbol2;
+                        return _symbolPlayerO;
                     case CellState.CROSS:
-                        return _playerSymbol1;
+                        return _symbolPlayerX;
                     default:
-                        return _defaultSymbol;
+                        return _symbolDefault;
                 }
             }
         }
@@ -50,13 +50,13 @@ namespace BlazroTicTacToe.Components
                 switch (state)
                 {
                     case CellState.DEFAULT:
-                        return _defaultColor;
+                        return _colorDefault;
                     case CellState.CIRCLE:
-                        return _playerColor2;
+                        return _colorPlayerO;
                     case CellState.CROSS:
-                        return _playerColor1;
+                        return _colorPlayerX;
                     default:
-                        return _defaultColor;
+                        return _colorDefault;
                 }
             }
         }

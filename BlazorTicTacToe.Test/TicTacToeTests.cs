@@ -6,6 +6,7 @@ namespace BlazorTicTacToe.Test
 
     public class TicTacToeTests
     {
+        // --- Game Logic --- //
         [Fact]
         public void GameLogic_IsBoardFull_CaseInitial()
         {
@@ -69,7 +70,6 @@ namespace BlazorTicTacToe.Test
             gameLogic.IsBoardFull.Should().BeTrue();
         }
 
-
         [Fact]
         public void GameLogic_ChangePlayer_SwitchingPlayer()
         {
@@ -90,7 +90,6 @@ namespace BlazorTicTacToe.Test
             result2.Should().NotBe(result1);
             result2.Should().NotBe(result3);
         }
-
 
         [Fact]
         public void GameLogic_CheckIfCurrentPlayerWon_ReturnsTrue()
@@ -287,7 +286,6 @@ namespace BlazorTicTacToe.Test
             result5.Should().BeFalse();
         }
 
-
         [Fact]
         public void GameLogic_CheckCellForCurrentPlayer_ReturnTrue()
         {
@@ -357,7 +355,6 @@ namespace BlazorTicTacToe.Test
             result6.Should().BeFalse();
         }
 
-
         [Fact]
         public void GameLogic_LockBoard_Complete()
         {
@@ -395,7 +392,6 @@ namespace BlazorTicTacToe.Test
             gameLogic.currentBoardData[2, 2].Disabled.Should().BeTrue();
 
         }
-
 
         [Fact]
         public void GameLogic_RestartBoard_Complete()
@@ -436,6 +432,139 @@ namespace BlazorTicTacToe.Test
         }
 
 
+        // --- Board Cell --- //
+        [Fact]
+        public void BoardCell_GetText_Successful()
+        {
+            // Arrange 
+            BoardCell cell = new BoardCell(CellState.DEFAULT);
+
+            // Act
+            string result1 = cell.Text;
+
+            cell.ChangeState(CellState.CIRCLE);
+            string result2 = cell.Text;
+
+            cell.ChangeState(CellState.CROSS);
+            string result3 = cell.Text;
+
+            // Assert
+            result1.Should().Be(BoardCell._symbolDefault);
+            result2.Should().Be(BoardCell._symbolPlayerO);
+            result3.Should().Be(BoardCell._symbolPlayerX);
+        }
+        [Fact]
+        public void BoardCell_GetColor_Successful()
+        {
+            // Arrange 
+            BoardCell cell = new BoardCell(CellState.DEFAULT);
+
+            // Act
+            string result1 = cell.Color;
+
+            cell.ChangeState(CellState.CIRCLE);
+            string result2 = cell.Color;
+
+            cell.ChangeState(CellState.CROSS);
+            string result3 = cell.Color;
+
+            // Assert
+            result1.Should().Be(BoardCell._colorDefault);
+            result2.Should().Be(BoardCell._colorPlayerO);
+            result3.Should().Be(BoardCell._colorPlayerX);
+        }
+        [Fact]
+        public void BoardCell_GetDisabledText_Successful()
+        {
+            // Arrange 
+            BoardCell cell = new BoardCell(CellState.DEFAULT);
+
+            // Act
+            string result1 = cell.DisabledText;
+
+            cell.ChangeState(CellState.CIRCLE);
+            string result2 = cell.DisabledText;
+
+            cell.ChangeState(CellState.CROSS);
+            string result3 = cell.DisabledText;
+
+            // Assert
+            result1.Should().Be(BoardCell._enabledText);
+            result2.Should().Be(BoardCell._disabledText);
+            result3.Should().Be(BoardCell._disabledText);
+        }
+
+
+        [Fact]
+        public void BoardCell_Constructor_Default()
+        {
+            // Arrange 
+            BoardCell cell = new BoardCell();
+
+            // Assert
+            cell.State.Should().Be(CellState.DEFAULT);
+        }
+        [Fact]
+        public void BoardCell_Constructor_ManuallySet()
+        {
+            // Arrange 
+            BoardCell cell = new BoardCell(CellState.CROSS);
+
+            // Assert
+            cell.State.Should().Be(CellState.CROSS);
+        }
+
+        [Fact]
+        public void BoardCell_ChangeState_Successful()
+        {
+            // Arrange 
+            BoardCell cell = new BoardCell(CellState.DEFAULT);
+
+            // Act
+            CellState result1 = cell.State;
+
+            cell.ChangeState(CellState.CROSS);
+            CellState result2 = cell.State;
+
+            cell.ChangeState(CellState.CIRCLE);
+            CellState result3 = cell.State;
+
+            cell.ChangeState(CellState.DEFAULT);
+            CellState result4 = cell.State;
+
+            // Assert
+            result1.Should().Be(CellState.DEFAULT);
+            result2.Should().Be(CellState.CROSS);
+            result3.Should().Be(CellState.CIRCLE);
+            result4.Should().Be(CellState.DEFAULT);
+        }
+
+
+        [Fact]
+        public void BoardCell_Disable_Successful()
+        {
+            // Arrange 
+            BoardCell cell = new BoardCell(CellState.DEFAULT);
+
+            // Act
+            cell.Disable();
+
+            // Assert
+            cell.Disabled.Should().BeTrue();
+        }
+        [Fact]
+        public void BoardCell_Enable_Successful()
+        {
+            // Arrange 
+            BoardCell cell = new BoardCell(CellState.DEFAULT);
+
+            // Act
+            cell.Disable();
+            cell.Enable();
+
+            // Assert
+            cell.Disabled.Should().BeFalse();
+        }
 
 
 
